@@ -1,6 +1,8 @@
 import os
 import sys
 
+username = os.getlogin()
+
 def checker(path):
 
 	try:
@@ -10,7 +12,7 @@ def checker(path):
 		return None
 
 	for y in [reading[5], reading[7], reading[8]]:
-		if os.getlogin() not in y:
+		if username not in y:
 			print(f"\33[91m{path}: Wrong Username in file!\033[0m")
 			break
 	print(f"\33[92m{path}: OK!\033[0m")
@@ -20,7 +22,7 @@ def checker(path):
 def main(argv):
 
 	if len(argv) < 2:
-		print("Error. Not enough arguments.\n\npython3 HC.py \{filepath\} \{filepath2\} ...")
+		print("Error. Not enough arguments.\n\nDo 'python3 HC.py \{filepath\} \{filepath2\} ...'")
 		return None
 
 	for x in argv[1:]:
