@@ -1,30 +1,39 @@
 import os
 import sys
+import requests
 
 wanted = ["c", "h"]
 
 
 def Get_Username(argv):
-    """"Try to find an author file."""
+	""""Try to find an author file."""
 
-    print("Author file: ", end="")
-    try:
-        dire = os.listdir(argv[1])
-    except OSError:
-        try:
-            dire = os.listdir("./")
-        except OSError:
-            return os.getlogin()
-    for x in dire:
-        if x.lower() == "author":
-            try:
-                with open(f"{argv[1]}/{x}", "r") as f:
-                    print("\033[32mV\033[0m")
-                    return(f.read().split("\n")[0])
-            except IOError:
-                continue
-    print("\033[91mX\033[0m")
-    return os.getlogin()
+	path = argv[1]
+	print("Author file: ", end="")
+
+	for x in argv[1:]:
+		try:
+			dire = os.listdir(path)
+			break
+		except OSError:
+			try:
+				dire = os.listdir("./")
+				path = "./"
+			except OSError:
+				print("\033[32mX\033[0m")
+				return os.getlogin()
+
+	for x in dire:
+		if x.lower() == "author":
+			try:
+				with open(f"{path}/{x}", "r") as f:
+					print("\033[32mV\033[0m")
+					return(f.read().split("\n")[0])
+			except IOError:
+				continue
+
+	print("\033[91mX\033[0m")
+	return os.getlogin()
 
 
 username = Get_Username(sys.argv)
@@ -70,9 +79,9 @@ def Main(argv):
 				return None
 		else:
 			Checker(x)
-	print("\n--------------------\tNorminette\t--------------------\n")
-	os.system(f"norminette {argv[1]}")
-
+	print("\n\033[91m--------------------\tNorminette\t--------------------\033[0m\n")
+	for x in argv[1:]:
+		os.system(f"norminette {x}")
 
 Main(sys.argv)
 
