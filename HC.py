@@ -1,10 +1,38 @@
 import os
 import sys
+import requests
 
-username = os.getlogin()
 wanted = ["c", "h"]
 
-def checker(path):
+
+def Get_Username(argv):
+    """"Try to find an author file."""
+
+    print("Author file: ", end="")
+    try:
+        dire = os.listdir(argv[1])
+    except OSError:
+        try:
+            dire = os.listdir("./")
+        except OSError:
+            return os.getlogin()
+    for x in dire:
+        if x.lower() == "author":
+            try:
+                with open(f"{argv[1]}/{x}", "r") as f:
+                    print("\033[32mV\033[0m")
+                    return(f.read().split("\n")[0])
+            except IOError:
+                continue
+    print("\033[91mX\033[0m")
+    return os.getlogin()
+
+
+username = Get_Username(sys.argv)
+print(f"Username: {username}\n")
+
+
+def Checker(path):
 
 	try:
 		with open(f"{path}", "r") as f:
@@ -14,12 +42,12 @@ def checker(path):
 
 	for y, z in zip([reading[5], reading[7], reading[8]], (6, 8, 9)):
 		if username not in y:
-			print(f"\33[91m{path}: Wrong Username in file!	line {z}\033[0m")
+			print(f"\033[91m{path}: Wrong Username in file!	line {z}\033[0m")
 			return None
-	print(f"\33[92m{path}: OK!\033[0m")
+	print(f"\033[92m{path}: OK!\033[0m")
 
 
-def main(argv):
+def Main(argv):
 
 	if len(argv) < 2:
 		print("Error. Not enough arguments.\n\nDo 'python3 HC.py \{filepath\} \{filepath2\} ...'")
@@ -34,7 +62,7 @@ def main(argv):
 					var = y.split(".")
 					try:
 						if y.split(".")[1] in wanted:
-							checker(f"{x}/{y}")
+							Checker(f"{x}/{y}")
 					except IndexError:
 						continue
 
@@ -42,9 +70,10 @@ def main(argv):
 				print("Unexpected error.")
 				return None
 		else:
-			checker(x)
-	print("\n-----------------------------	Norminette	-----------------------------\n")
+			Checker(x)
+	print("\n--------------------\tNorminette\t--------------------\n")
 	os.system(f"norminette {argv[1]}")
 
 
-main(sys.argv)
+Main(sys.argv)
+
